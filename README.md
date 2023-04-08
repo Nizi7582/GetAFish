@@ -1,4 +1,4 @@
-# WikiFish
+# GetAFish
 
 ## Build Setup
 

@@ -1,5 +1,5 @@
 <template>
-  <body class="bg-white dark:bg-darker">
+  <body class="min-h-screen flex justify-center items-center">
     <div class="wrapper">
       <div><span class="dot"></span></div>
       <div><span class="dot"></span></div>
@@ -17,64 +17,109 @@
       <div><span class="dot"></span></div>
       <div><span class="dot"></span></div>
     </div>
-    <div class="relative dark:bg-gray-900">
-      <div class="container m-auto px-6 pt-24 md:px-12 lg:px-7">
-        <div class="flex items-center flex-wrap px-2 md:px-0">
-          <div class="relative lg:w-6/12 lg:py-24 xl:py-32">
-            <h1
-              class="font-bold text-4xl text-yellow-400 dark:text-yellow-50 md:text-5xl lg:w-10/12"
+    <div class="relative flex justify-center items-center">
+      <div
+        class="bg-yellow-400 shadow-lg w-full h-full rounded-3xl absolute transform -rotate-6"
+      ></div>
+      <div
+        class="bg-blue-400 shadow-lg w-full h-full rounded-3xl absolute transform rotate-6"
+      ></div>
+      <div class="py-32 px-32 bg-gray-100 rounded-2xl shadow-xl z-20">
+        <div>
+          <h1 class="text-3xl font-bold text-center mb-4 cursor-pointer">
+            Log Into Your Account
+          </h1>
+          <p
+            class="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide cursor-pointer"
+          >
+            Get access to our collection of fish !
+          </p>
+        </div>
+        <div class="space-y-4">
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Username"
+            v-model="name"
+            class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
+          />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+            v-model="password"
+            class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
+          />
+        </div>
+        <div v-if="errorMessage" class="bg-red-200 py-2 px-4 text-red-800">
+          {{ errorMessage }}
+        </div>
+        <div class="text-center mt-6">
+          <button
+            @click="login()"
+            class="py-3 w-64 text-xl text-white bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl"
+          >
+            Sign In
+          </button>
+          <p class="mt-4 text-sm">
+            Don't have an account ?
+            <nuxt-link to="../register" class="underline cursor-pointer">
+              Sign Up</nuxt-link
             >
-              Your favorite fish, right at your door
-            </h1>
-            <form action="" class="w-full mt-12">
-              <div
-                class="relative flex p-1 rounded-full bg-white dark:bg-gray-800 dark:border-gray-600 border border-yellow-200 shadow-md md:p-2"
-              >
-                
-                <input
-                  placeholder="Browse inside our collection"
-                  class="w-full p-4 rounded-full outline-none bg-transparent dark:text-white dark:placeholder-gray-300"
-                  type="text"
-                />
-                <button
-                  type="button"
-                  title="Start buying"
-                  class="ml-auto py-3 px-6 rounded-full text-center transition bg-gradient-to-b from-yellow-200 to-yellow-300 hover:to-red-300 active:from-yellow-400 focus:from-red-400 md:px-12"
-                >
-                  <span class="hidden text-yellow-900 font-semibold md:block">
-                    Search
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-5 mx-auto text-yellow-900 md:hidden"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </div>
-          <div class="ml-auto -mb-24 lg:-mb-56 lg:w-6/12">
-            <img
-              src="~/assets/img/fishing.svg"
-              class="relative w-full h-auto"
-              alt="fishing illustration"
-              loading="lazy"
-              width="100"
-              height="450"
-            />
-          </div>
+          </p>
         </div>
       </div>
     </div>
   </body>
 </template>
 
-<script></script>
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      name: "",
+      password: "",
+      successMessage: "",
+      errorMessage: "",
+    };
+  },
+  layout: 'empty',
+  methods: {
+    login() {
+      const formData = new FormData();
+      formData.append("name", this.name);
+      formData.append("password", this.password);
+
+      // Effectuer une requête AJAX pour vérifier si les informations d'identification sont correctes
+      axios
+        .post("http://localhost/my-app/ScribblBack/login.php", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          // Vérifier si les informations d'identification sont correctes
+          if (response.data.name) {
+            this.successMessage = "Connexion réussie!";
+            this.$store.commit('user/addUser', { name: this.name, token: response.data.token })
+            this.$router.push({
+              path: "/",
+            });
+          } else {
+            this.errorMessage = "Nom d'utilisateur ou mot de passe incorrect";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+};
+</script>
 
 <style>
 * {
@@ -202,5 +247,4 @@ div .dot {
     transform: scale(1.3) translateY(-100px) rotate(360deg);
   }
 }
-
 </style>
