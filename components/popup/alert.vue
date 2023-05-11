@@ -12,11 +12,13 @@
 
         <div class="flex items-center gap-4 p-4">
             <div>
-            <p class="font-medium text-gray-900">Added to the cart</p>
+                <p class="font-medium text-gray-900">
+                    Added to the cart
+                </p>
 
-            <p class="line-clamp-1 text-sm text-gray-500">
-                You successfully added the fish in your cart !
-            </p>
+                <p class="line-clamp-1 text-sm text-gray-500">
+                    You successfully added the fish in your cart !
+                </p>
             </div>
         </div>
     </div>

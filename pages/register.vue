@@ -17,14 +17,14 @@
       <div><span class="dot"></span></div>
       <div><span class="dot"></span></div>
     </div>
-    <div class="relative flex justify-center items-center">
+    <div class="relative flex justify-center items-center max-w-xl">
       <div
         class="bg-yellow-400 shadow-lg w-full h-full rounded-3xl absolute transform -rotate-6"
       ></div>
       <div
         class="bg-blue-400 shadow-lg w-full h-full rounded-3xl absolute transform rotate-6"
       ></div>
-      <div class="py-32 px-32 bg-gray-100 rounded-2xl shadow-xl z-20">
+      <div class="py-20 px-32 bg-gray-100 rounded-2xl shadow-xl z-20">
         <div>
           <h1 class="text-3xl font-bold text-center mb-4 cursor-pointer">
             Create An Account
@@ -44,22 +44,46 @@
             v-model="name"
             class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
           />
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Email"
-            v-model="email"
-            class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-          />
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password"
-            v-model="password"
-            class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-          />
+          <div>
+            <input
+              type="email"
+              name="emails"
+              id="email"
+              placeholder="Email"
+              v-model="email"
+              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+              required
+              minlength="7"
+              @blur="validateEmail"
+              class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
+              autocomplete="new-password"
+            />
+            <div v-if="!isEmailValid" class="error text-red-500 text-sm">
+              Please enter a valid email address
+            </div>
+            <div v-if="errorMail != ''" class="error text-red-500 text-sm">
+              A user with this email already exist
+            </div>
+          </div>
+          <div>
+            <input
+              type="password"
+              name="passwords"
+              id="password"
+              placeholder="Password"
+              v-model="password"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
+              required
+              minlength="7"
+              @blur="validatePassword"
+              class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
+              autocomplete="new-password"
+            />
+            <div v-if="!isPasswordValid" class="error text-red-500 text-sm">
+              Please enter a password that includes at least one digit, one
+              lowercase letter, one uppercase letter, and one symbol.
+            </div>
+          </div>
         </div>
         <div class="text-center mt-6">
           <button
@@ -90,9 +114,9 @@ export default {
       name: '',
       email: '',
       password: '',
-      successMessage: '',
-      errorMessage: '',
-      errorMail: '',
+      isEmailValid: true,
+      isPasswordValid: true,
+      errorMail: ''
     }
   },
   methods: {
@@ -103,14 +127,6 @@ export default {
       formData.append('password', this.password)
 
       // Vérifier que les champs sont remplis
-      if (!this.name || !this.email || !this.password) {
-        this.errorMessage = 'Veuillez remplir tous les champs'
-        setTimeout(() => {
-          this.errorMessage = ''
-        }, 3500) // masquer le message après 3,5 secondes
-        return
-      }
-
       axios
         .post('http://localhost/my-app/GetafishBack/register.php', formData, {
           headers: {
@@ -147,6 +163,15 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    validateEmail() {
+      this.isEmailValid =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email) && this.email.length >= 7
+    },
+    validatePassword() {
+      this.isPasswordValid =
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(this.password) &&
+        this.password.length >= 8
     },
   },
 }

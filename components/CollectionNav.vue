@@ -78,18 +78,34 @@
           </div>
         </div>
         <div v-else class="w-full flex text-xl justify-end px-4 items-center">
-          <nuxt-link to="/cart" class="flex items-center">
-            <span class="uppercase font-bold text-yellow-800">
-              {{ user.name }}
-            </span>
-            <div class="flex flex-row cursor-pointer truncate p-2 pl-3 rounded">
-              <div></div>
-              <div class="flex flex-row-reverse w-full text-yellow-600">
+          <div class="flex items-center">
+            <nuxt-link to="/account" class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 text-yellow-800"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+
+              <span class="uppercase font-bold text-yellow-700 pl-2 pr-8">
+                {{ user.name }}
+              </span>
+            </nuxt-link>
+            <nuxt-link to="/cart" class="flex flex-row cursor-pointer truncate p-2 pr-3 rounded">
+              <div class="flex flex-row-reverse w-full text-yellow-800">
                 <div slot="icon" class="relative">
                   <div
                     class="absolute text-xs rounded-full -mt-1 -mr-2 px-1 font-bold top-0 right-0 bg-red-700 text-white"
                   >
-                    3
+                    {{ cart }}
                   </div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +117,7 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    class="feather feather-shopping-cart w-6 h-6 mt-2"
+                    class="feather feather-shopping-cart w-7 h-7"
                   >
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
@@ -111,8 +127,8 @@
                   </svg>
                 </div>
               </div>
-            </div>
-          </nuxt-link>
+            </nuxt-link>
+          </div>
         </div>
       </div>
     </div>
@@ -126,6 +142,9 @@ export default {
   computed: {
     ...mapGetters({
       user: 'user/getUser',
+    }),
+    ...mapGetters({
+      cart: 'cart/getTotalFish',
     }),
     ...mapMutations({
       delete: 'user/deleteUser',

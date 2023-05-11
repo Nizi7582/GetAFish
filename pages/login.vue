@@ -38,18 +38,20 @@
         <div class="space-y-4">
           <input
             type="text"
-            name="name"
+            name="nameé"
             id="name"
-            placeholder="Username"
+            placeholder="name"
             v-model="name"
+            autocomplete=""
             class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
           />
           <input
             type="password"
-            name="password"
+            name="passwordè"
             id="password"
             placeholder="Password"
             v-model="password"
+            autocomplete=""
             class="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
           />
         </div>
@@ -96,7 +98,7 @@ export default {
 
       // Effectuer une requête AJAX pour vérifier si les informations d'identification sont correctes
       axios
-        .post("http://localhost/my-app/ScribblBack/login.php", formData, {
+        .post("http://localhost/my-app/GetafishBack/login.php", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -107,7 +109,7 @@ export default {
             this.successMessage = "Connexion réussie!";
             this.$store.commit('user/addUser', { name: this.name, token: response.data.token })
             this.$router.push({
-              path: "/",
+              path: "/", 
             });
           } else {
             this.errorMessage = "Nom d'utilisateur ou mot de passe incorrect";
